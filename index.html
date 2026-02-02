@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You are special! 💕</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink-primary: #FF6B9D;
+            --pink-light: #FFB3D9;
+            --pink-dark: #C44569;
+            --bg-dark: #0a0015;
+            --bg-darker: #050008;
+            --white: #FFFFFF;
+            --warning-yellow: #FFD700;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 50%, #1a0520 100%);
+            color: var(--white);
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--pink-light);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0.6;
+            }
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        /* Page 1: Welcome */
+        .avatar {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(255, 107, 157, 0.4);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 20px 60px rgba(255, 107, 157, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 25px 80px rgba(255, 107, 157, 0.6);
+            }
+        }
+
+        .avatar-emoji {
+            font-size: 6rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
+            color: var(--white);
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.3rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        /* Page 2: Loading/Measuring */
+        .loading-container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .loading-text {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            font-weight: 400;
+        }
+
+        .percentage {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--pink-primary), var(--pink-light));
+            border-radius: 20px;
+            width: 0%;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+        }
+
+        .warning {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+            color: var(--pink-primary);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .warning.show {
+            opacity: 1;
+        }
+
+        .warning-icon {
+            font-size: 1.5rem;
+            color: var(--warning-yellow);
+        }
+
+        /* Page 3: Message with Typewriter */
+        .message-container {
+            max-width: 700px;
+            text-align: center;
+            position: relative;
+        }
+
+        .message-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+        }
+
+        .message-text {
+            font-size: 1.5rem;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            min-height: 200px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: var(--pink-primary);
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .swipe-hint {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Page 4: Question */
+        .question-container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .question-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3rem;
+            line-height: 1.3;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.6);
+        }
+
+        .btn-no {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease-out;
+        }
+
+        .btn-no:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .btn-no.floating {
+            position: fixed;
+            z-index: 1000;
+        }
+
+        /* Page 5: Success */
+        .success-container {
+            text-align: center;
+        }
+
+        .success-emoji {
+            font-size: 8rem;
+            margin-bottom: 2rem;
+            animation: celebrate 1s ease-in-out;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--pink-primary);
+            position: absolute;
+            animation: confetti-fall 3s linear;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .percentage {
+                font-size: 3.5rem;
+            }
+            .message-title, .question-title {
+                font-size: 2rem;
+            }
+            .message-text {
+                font-size: 1.2rem;
+            }
+            .success-title {
+                font-size: 2.5rem;
+            }
+            .success-emoji {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background particles -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Page 1: Welcome -->
+    <div class="page active" id="page1">
+        <div class="avatar">
+            <div class="avatar-emoji">🤍</div>
+        </div>
+        <h1>Hey Beautiful</h1>
+        <p class="subtitle">Do you even know how cute you are?</p>
+        <button class="btn-primary" onclick="goToPage(2)">
+            Open My Heart 💗
+        </button>
+    </div>
+
+    <!-- Page 2: Loading/Measuring -->
+    <div class="page" id="page2">
+        <div class="loading-container">
+            <p class="loading-text">Measuring your cuteness...</p>
+            <div class="percentage" id="percentage">0%</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="warning" id="warning">
+                <span class="warning-icon">⚠️</span>
+                <span>WARNING: TOO CUTE TO HANDLE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Message with Typewriter -->
+    <div class="page" id="page3">
+        <div class="message-container">
+            <h2 class="message-title">To My Sweetheart 💕</h2>
+            <div class="message-text" id="messageText"></div>
+            <div class="swipe-hint">
+                <span>Swipe or Click →</span>
+                <span style="font-size: 1.5rem;">👆</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Question -->
+    <div class="page" id="page4">
+        <div class="question-container">
+            <h2 class="question-title">Will you be my Valentine, Esha? 💖</h2>
+            <div class="button-container">
+                <button class="choice-btn btn-yes" onclick="handleYes()">Yes! 💕</button>
+                <button class="choice-btn btn-no" id="noBtn" onclick="handleNo(event)">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 5: Success -->
+    <div class="page" id="page5">
+        <div class="success-container">
+            <div class="success-emoji">🎉💕✨</div>
+            <h2 class="success-title">Yay!</h2>
+            <p class="success-message">You've made me the happiest person alive!</p>
+            <p class="success-message" style="margin-top: 2rem; font-size: 2.5rem;">I love you, Nanna! 💖</p>
+        </div>
+    </div>
+
+    <script>
+        // Create background particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        let currentPage = 1;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function goToPage(pageNumber) {
+            // Hide current page
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            
+            // Show new page
+            currentPage = pageNumber;
+            document.getElementById(`page${currentPage}`).classList.add('active');
+
+            // Special actions for specific pages
+            if (pageNumber === 2) {
+                startLoading();
+            } else if (pageNumber === 3) {
+                startTypewriter();
+            } else if (pageNumber === 4) {
+                initNoButton();
+            }
+        }
+
+        // Page 2: Loading animation
+        function startLoading() {
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            const percentage = document.getElementById('percentage');
+            const warning = document.getElementById('warning');
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 120) {
+                    progress = 120;
+                    clearInterval(interval);
+                    warning.classList.add('show');
+                    setTimeout(() => goToPage(3), 1500);
+                }
+                
+                progressBar.style.width = Math.min(progress, 100) + '%';
+                percentage.textContent = Math.floor(progress) + '%';
+            }, 100);
+        }
+
+        // Page 3: Typewriter effect
+        const message = "You are the song that my heart loves to sing. They say you fall in love with a glance, but with you, I fell in love with a thousand ways. The way your hand fits perfectly in mine, the way your voice carries the melody of happiness, the way you understand me before I speak. Happy Valentine's Day, My Sweetheart!";
+        
+        let charIndex = 0;
+        let typewriterInterval;
+
+        function startTypewriter() {
+            const messageText = document.getElementById('messageText');
+            messageText.innerHTML = '<span class="cursor"></span>';
+            charIndex = 0;
+            
+            typewriterInterval = setInterval(() => {
+                if (charIndex < message.length) {
+                    const currentText = message.substring(0, charIndex + 1);
+                    messageText.innerHTML = currentText + '<span class="cursor"></span>';
+                    charIndex++;
+                } else {
+                    clearInterval(typewriterInterval);
+                    // Remove cursor after typing is done
+                    setTimeout(() => {
+                        messageText.innerHTML = message;
+                    }, 500);
+                }
+            }, 50);
+        }
+
+        // Page 4: No button running away from cursor
+        let noBtn;
+        let isFloating = false;
+        const safeDistance = 220; // Increased detection range
+
+        function initNoButton() {
+            noBtn = document.getElementById('noBtn');
+            if (!noBtn) return;
+            
+            // Reset button to normal state
+            isFloating = false;
+            noBtn.classList.remove('floating');
+            noBtn.style.left = '';
+            noBtn.style.top = '';
+            noBtn.style.transform = '';
+        }
+
+        function makeButtonFloat() {
+            if (!noBtn || isFloating) return;
+            
+            // Get current position before making it float
+            const rect = noBtn.getBoundingClientRect();
+            
+            // Make it float
+            isFloating = true;
+            noBtn.classList.add('floating');
+            noBtn.style.left = rect.left + 'px';
+            noBtn.style.top = rect.top + 'px';
+        }
+
+        function getDistance(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
+
+        function moveNoButtonAway(mouseX, mouseY) {
+            if (!noBtn || currentPage !== 4) return;
+
+            const rect = noBtn.getBoundingClientRect();
+            const btnCenterX = rect.left + rect.width / 2;
+            const btnCenterY = rect.top + rect.height / 2;
+            
+            const distance = getDistance(mouseX, mouseY, btnCenterX, btnCenterY);
+            
+            // If cursor is getting close
+            if (distance < safeDistance) {
+                // Make button float if not already
+                if (!isFloating) {
+                    makeButtonFloat();
+                    return; // Wait one frame for float to apply
+                }
+                
+                // Calculate escape direction (away from cursor)
+                const angle = Math.atan2(btnCenterY - mouseY, btnCenterX - mouseX);
+                
+                // Significantly increased base speed and acceleration
+                const baseSpeed = 6; // Increased from 3
+                const acceleration = (safeDistance - distance) / 15; // More aggressive
+                const escapeSpeed = baseSpeed + acceleration;
+                
+                // Calculate new position
+                const moveX = Math.cos(angle) * escapeSpeed;
+                const moveY = Math.sin(angle) * escapeSpeed;
+                
+                let newX = rect.left + moveX;
+                let newY = rect.top + moveY;
+                
+                // Keep within bounds
+                const padding = 20;
+                newX = Math.max(padding, Math.min(window.innerWidth - rect.width - padding, newX));
+                newY = Math.max(padding, Math.min(window.innerHeight - rect.height - padding, newY));
+                
+                noBtn.style.left = newX + 'px';
+                noBtn.style.top = newY + 'px';
+            }
+        }
+
+        // Mouse tracking
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let isTracking = false;
+
+        function continuousTracking() {
+            if (currentPage === 4) {
+                moveNoButtonAway(lastMouseX, lastMouseY);
+                requestAnimationFrame(continuousTracking);
+            } else {
+                isTracking = false;
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            
+            if (currentPage === 4 && !isTracking) {
+                isTracking = true;
+                continuousTracking();
+            }
+        });
+
+        // Touch support
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                lastMouseX = e.touches[0].clientX;
+                lastMouseY = e.touches[0].clientY;
+                
+                if (currentPage === 4 && !isTracking) {
+                    isTracking = true;
+                    continuousTracking();
+                }
+            }
+        });
+
+        function handleNo(event) {
+            event.preventDefault();
+        }
+
+        function handleYes() {
+            goToPage(5);
+            createConfetti();
+        }
+
+        // Confetti animation
+        function createConfetti() {
+            const colors = ['#FF6B9D', '#FFB3D9', '#C44569', '#FFD700', '#FFA07A'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = '0s';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Touch/swipe support
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        // Click to advance (for page 3)
+        document.getElementById('page3').addEventListener('click', () => {
+            if (currentPage === 3 && charIndex >= message.length) {
+                goToPage(4);
+            }
+        });
+
+        function handleSwipe() {
+            if (touchStartX - touchEndX > 50 && currentPage === 3 && charIndex >= message.length) {
+                // Swiped left
+                goToPage(4);
+            } else if (touchEndX - touchStartX > 50 && currentPage > 1 && currentPage !== 5) {
+                // Swiped right (go back)
+                goToPage(currentPage - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentPage === 3 && charIndex >= message.length) {
+                goToPage(4);
+            } else if (e.key === 'ArrowLeft' && currentPage > 1 && currentPage !== 5) {
+                goToPage(currentPage - 1);
+            }
+        });
+    </script>
+</body>
+</html>
